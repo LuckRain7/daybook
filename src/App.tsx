@@ -1,5 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import type { ChangeEvent } from "react";
+import { HistoryPanel } from "./components/HistoryPanel";
+import { SettingsModal } from "./components/SettingsModal";
+import { TodayEditorPanel } from "./components/TodayEditorPanel";
 import {
     getAllEntries,
     getEntryByDate,
@@ -7,11 +10,7 @@ import {
     saveTodayEntry,
 } from "./storage/diaryDb";
 import type { DiaryEntry } from "./types";
-import {
-    formatDateLabel,
-    formatDateTime,
-    getLocalDateString,
-} from "./utils/date";
+import { formatDateLabel, getLocalDateString } from "./utils/date";
 
 const today = getLocalDateString();
 
@@ -25,7 +24,7 @@ function createEmptyEntry(date: string): DiaryEntry {
 }
 
 export default function App() {
-    const fileInputRef = useRef<HTMLInputElement | null>(null);
+    const fileInputRef = useRef<HTMLInputElement>(null);
     const [todayEntry, setTodayEntry] = useState<DiaryEntry>(
         createEmptyEntry(today),
     );
@@ -205,191 +204,46 @@ export default function App() {
     return (
         <main className="page-shell">
             {isSettingsOpen ? (
-                <div
-                    className="modal-overlay"
-                    onClick={() => setIsSettingsOpen(false)}
-                    role="presentation"
-                >
-                    <section
-                        className="settings-modal"
-                        onClick={(event) => event.stopPropagation()}
-                        role="dialog"
-                        aria-modal="true"
-                        aria-label="设置"
-                    >
-                        <div className="settings-modal-header">
-                            <div>
-                                <p className="panel-kicker">设置</p>
-                                <h2>数据导入与导出</h2>
-                            </div>
-                            <button
-                                type="button"
-                                className="close-button"
-                                onClick={() => setIsSettingsOpen(false)}
-                                aria-label="关闭设置"
-                            >
-                                ×
-                            </button>
-                        </div>
-
-                        <p className="settings-copy">
-                            导出会下载当前浏览器中的全部日记。导入会用备份文件覆盖当前本地数据。
-                        </p>
-
-                        <div className="settings-actions">
-                            <button
-                                type="button"
-                                className="secondary-button"
-                                onClick={handleExport}
-                                disabled={isExporting || isImporting}
-                            >
-                                {isExporting ? "导出中..." : "导出数据"}
-                            </button>
-                            <button
-                                type="button"
-                                className="secondary-button"
-                                onClick={handleImportClick}
-                                disabled={isExporting || isImporting}
-                            >
-                                {isImporting ? "导入中..." : "导入数据"}
-                            </button>
-                            <input
-                                ref={fileInputRef}
-                                className="hidden-input"
-                                type="file"
-                                accept="application/json"
-                                onChange={handleImport}
-                            />
-                        </div>
-                    </section>
-                </div>
+                <SettingsModal
+                    isImporting={isImporting}
+                    isExporting={isExporting}
+                    fileInputRef={fileInputRef}
+                    onClose={() => setIsSettingsOpen(false)}
+                    onExport={handleExport}
+                    onImportClick={handleImportClick}
+                    onImport={handleImport}
+                />
             ) : null}
 
             <section className="content-grid">
-                <article className="panel panel-editor">
-                    <div className="panel-header">
-                        <div>
-                            <p className="panel-kicker">今日编辑</p>
-                            <h2>新建或更新今天的日记</h2>
-                        </div>
-                        <span className="badge">仅限今天</span>
-                    </div>
+                <TodayEditorPanel
+                    todayEntry={todayEntry}
+                    isLoading={isLoadingToday}
+                    isSaving={isSaving}
+                    statusMessage={statusMessage}
+                    errorMessage={errorMessage}
+                    onContentChange={(value) =>
+                        setTodayEntry((current) => ({
+                            ...current,
+                            content: value,
+                        }))
+                    }
+                    onNoteChange={(value) =>
+                        setTodayEntry((current) => ({
+                            ...current,
+                            note: value,
+                        }))
+                    }
+                    onSave={handleSave}
+                />
 
-                    {isLoadingToday ? (
-                        <p className="muted">正在加载今天的内容...</p>
-                    ) : (
-                        <>
-                            <label className="field">
-                                <span>日记内容</span>
-                                <textarea
-                                    value={todayEntry.content}
-                                    onChange={(event) =>
-                                        setTodayEntry((current) => ({
-                                            ...current,
-                                            content: event.target.value,
-                                        }))
-                                    }
-                                    rows={12}
-                                    placeholder="写下今天发生的事、想法，或者一句不想忘记的话。"
-                                />
-                            </label>
-
-                            <label className="field">
-                                <span>备注</span>
-                                <textarea
-                                    value={todayEntry.note}
-                                    onChange={(event) =>
-                                        setTodayEntry((current) => ({
-                                            ...current,
-                                            note: event.target.value,
-                                        }))
-                                    }
-                                    rows={4}
-                                    placeholder="给今天的日记补充一个备注。"
-                                />
-                            </label>
-
-                            <button
-                                className="primary-button"
-                                onClick={handleSave}
-                                disabled={isSaving}
-                            >
-                                {isSaving ? "保存中..." : "保存今天的日记"}
-                            </button>
-                        </>
-                    )}
-
-                    {statusMessage ? (
-                        <p className="status success">{statusMessage}</p>
-                    ) : null}
-                    {errorMessage ? (
-                        <p className="status error">{errorMessage}</p>
-                    ) : null}
-                </article>
-
-                <article className="panel panel-history">
-                    <div className="panel-header">
-                        <div>
-                            <p className="panel-kicker">按天查找</p>
-                            <h2>查看历史日记</h2>
-                        </div>
-                    </div>
-
-                    <label className="field">
-                        <span>选择日期</span>
-                        <input
-                            type="date"
-                            value={selectedDate}
-                            onChange={(event) =>
-                                setSelectedDate(event.target.value)
-                            }
-                        />
-                    </label>
-
-                    <div className="history-card">
-                        <div className="history-meta">
-                            <strong>{formatDateLabel(selectedDate)}</strong>
-                            <span>
-                                {selectedDate === today
-                                    ? "今天可编辑"
-                                    : "历史仅查看"}
-                            </span>
-                        </div>
-
-                        {isLoadingHistory ? (
-                            <p className="muted">正在读取这一天的日记...</p>
-                        ) : null}
-
-                        {!isLoadingHistory && !selectedEntry ? (
-                            <p className="empty-state">该日期暂无日记记录。</p>
-                        ) : null}
-
-                        {!isLoadingHistory && selectedEntry ? (
-                            <div className="entry-preview">
-                                <section>
-                                    <h3>正文</h3>
-                                    <p>
-                                        {selectedEntry.content ||
-                                            "这一天保存了空白正文。"}
-                                    </p>
-                                </section>
-
-                                <section>
-                                    <h3>备注</h3>
-                                    <p>
-                                        {selectedEntry.note ||
-                                            "这一天没有备注。"}
-                                    </p>
-                                </section>
-
-                                <p className="updated-at">
-                                    最后更新：
-                                    {formatDateTime(selectedEntry.updatedAt)}
-                                </p>
-                            </div>
-                        ) : null}
-                    </div>
-                </article>
+                <HistoryPanel
+                    today={today}
+                    selectedDate={selectedDate}
+                    selectedEntry={selectedEntry}
+                    isLoading={isLoadingHistory}
+                    onSelectedDateChange={setSelectedDate}
+                />
             </section>
 
             <section className="hero-card">
