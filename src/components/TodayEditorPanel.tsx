@@ -1,5 +1,5 @@
-import { useLayoutEffect, useRef } from "react";
 import type { DiaryEntry } from "../types";
+import { MarkdownEditor } from "./MarkdownEditor";
 
 type TodayEditorPanelProps = {
     todayEntry: DiaryEntry;
@@ -22,18 +22,6 @@ export function TodayEditorPanel({
     onNoteChange,
     onSave,
 }: TodayEditorPanelProps) {
-    const contentTextareaRef = useRef<HTMLTextAreaElement>(null);
-
-    useLayoutEffect(() => {
-        const textarea = contentTextareaRef.current;
-        if (!textarea) {
-            return;
-        }
-
-        textarea.style.height = "auto";
-        textarea.style.height = `${textarea.scrollHeight}px`;
-    }, [todayEntry.content]);
-
     return (
         <article className="panel panel-editor">
             <div className="panel-header">
@@ -48,27 +36,27 @@ export function TodayEditorPanel({
                 <p className="muted">正在加载今天的内容...</p>
             ) : (
                 <>
-                    <label className="field">
+                    <div className="field">
                         <span>日记内容</span>
-                        <textarea
-                            ref={contentTextareaRef}
-                            className="content-textarea"
-                            value={todayEntry.content}
-                            onChange={(event) => onContentChange(event.target.value)}
-                            rows={1}
-                            placeholder="写下今天发生的事、想法，或者一句不想忘记的话。"
-                        />
-                    </label>
+                        <div className="editor-wrapper">
+                            <MarkdownEditor
+                                value={todayEntry.content}
+                                onChange={onContentChange}
+                                placeholder="写下今天发生的事、想法，或者一句不想忘记的话。"
+                            />
+                        </div>
+                    </div>
 
-                    <label className="field">
+                    <div className="field">
                         <span>备注</span>
-                        <textarea
-                            value={todayEntry.note}
-                            onChange={(event) => onNoteChange(event.target.value)}
-                            rows={4}
-                            placeholder="给今天的日记补充一个备注。"
-                        />
-                    </label>
+                        <div className="editor-wrapper">
+                            <MarkdownEditor
+                                value={todayEntry.note}
+                                onChange={onNoteChange}
+                                placeholder="给今天的日记补充一个备注。"
+                            />
+                        </div>
+                    </div>
 
                     <button
                         className="primary-button"

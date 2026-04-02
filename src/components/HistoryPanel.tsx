@@ -1,6 +1,7 @@
 import { useState } from "react";
 import type { DiaryEntry } from "../types";
 import { formatDateLabel, formatDateTime } from "../utils/date";
+import { MarkdownEditor } from "./MarkdownEditor";
 
 type HistoryPanelProps = {
     today: string;
@@ -59,22 +60,40 @@ export function HistoryPanel({
                     <div className="entry-preview">
                         <section>
                             <h3>正文</h3>
-                            <p
+                            <div
                                 className="clickable-text"
                                 onClick={() => setDetailField("content")}
                             >
-                                {selectedEntry.content || "这一天保存了空白正文。"}
-                            </p>
+                                {selectedEntry.content ? (
+                                    <div className="history-preview-editor">
+                                        <MarkdownEditor
+                                            value={selectedEntry.content}
+                                            readonly
+                                        />
+                                    </div>
+                                ) : (
+                                    <p>这一天保存了空白正文。</p>
+                                )}
+                            </div>
                         </section>
 
                         <section>
                             <h3>备注</h3>
-                            <p
+                            <div
                                 className="clickable-text"
                                 onClick={() => setDetailField("note")}
                             >
-                                {selectedEntry.note || "这一天没有备注。"}
-                            </p>
+                                {selectedEntry.note ? (
+                                    <div className="history-preview-editor">
+                                        <MarkdownEditor
+                                            value={selectedEntry.note}
+                                            readonly
+                                        />
+                                    </div>
+                                ) : (
+                                    <p>这一天没有备注。</p>
+                                )}
+                            </div>
                         </section>
 
                         <p className="updated-at">
@@ -97,7 +116,11 @@ export function HistoryPanel({
                         </button>
                     </div>
                     <div className="detail-modal-body">
-                        {detailText || "暂无内容。"}
+                        {detailText ? (
+                            <MarkdownEditor value={detailText} readonly />
+                        ) : (
+                            "暂无内容。"
+                        )}
                     </div>
                 </div>
             ) : null}
