@@ -47,6 +47,28 @@ npm run build
 npm run preview
 ```
 
+## GitHub Pages 自动部署
+
+仓库已包含 GitHub Actions 工作流：[`.github/workflows/deploy-pages.yml`](.github/workflows/deploy-pages.yml)。
+
+启用方式：
+
+1. 将代码推送到 GitHub 仓库的 `main` 分支。
+2. 打开仓库 `Settings > Pages`。
+3. 在 `Build and deployment` 中，将 `Source` 设为 `GitHub Actions`。
+4. 之后每次 push 到 `main`，都会自动执行构建并发布到 GitHub Pages。
+
+说明：
+
+- 项目当前按自定义域名根路径部署，`Vite` 的 `base` 为 `/`。
+- 仓库已包含 [`public/CNAME`](/Users/nc_rain/raincode/daybook/public/CNAME)，发布后会自动绑定自定义域名 `day.ilabubu.com`。
+
+如果要让 `day.ilabubu.com` 生效，还需要在域名 DNS 提供商处添加记录：
+
+- `CNAME` 记录：`day` 指向 `<你的 GitHub 用户名>.github.io`
+
+然后在仓库 `Settings > Pages` 中确认自定义域名为 `day.ilabubu.com`，等待 GitHub 完成证书签发。
+
 ## 使用说明
 
 1. 在左侧编辑区填写今天的日记正文和备注。
