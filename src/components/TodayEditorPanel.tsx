@@ -1,3 +1,4 @@
+import { useLayoutEffect, useRef } from "react";
 import type { DiaryEntry } from "../types";
 
 type TodayEditorPanelProps = {
@@ -21,6 +22,18 @@ export function TodayEditorPanel({
     onNoteChange,
     onSave,
 }: TodayEditorPanelProps) {
+    const contentTextareaRef = useRef<HTMLTextAreaElement>(null);
+
+    useLayoutEffect(() => {
+        const textarea = contentTextareaRef.current;
+        if (!textarea) {
+            return;
+        }
+
+        textarea.style.height = "auto";
+        textarea.style.height = `${textarea.scrollHeight}px`;
+    }, [todayEntry.content]);
+
     return (
         <article className="panel panel-editor">
             <div className="panel-header">
@@ -38,9 +51,11 @@ export function TodayEditorPanel({
                     <label className="field">
                         <span>日记内容</span>
                         <textarea
+                            ref={contentTextareaRef}
+                            className="content-textarea"
                             value={todayEntry.content}
                             onChange={(event) => onContentChange(event.target.value)}
-                            rows={12}
+                            rows={1}
                             placeholder="写下今天发生的事、想法，或者一句不想忘记的话。"
                         />
                     </label>
