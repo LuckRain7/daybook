@@ -1,3 +1,4 @@
+import { useState } from "react";
 import type { DiaryEntry } from "../types";
 import { formatDateLabel, formatDateTime } from "../utils/date";
 
@@ -16,6 +17,14 @@ export function HistoryPanel({
     isLoading,
     onSelectedDateChange,
 }: HistoryPanelProps) {
+    const [detailField, setDetailField] = useState<"content" | "note" | null>(null);
+
+    const detailTitle = detailField === "content" ? "正文" : "备注";
+    const detailText =
+        detailField === "content"
+            ? selectedEntry?.content
+            : selectedEntry?.note;
+
     return (
         <article className="panel panel-history">
             <div className="panel-header">
@@ -50,12 +59,22 @@ export function HistoryPanel({
                     <div className="entry-preview">
                         <section>
                             <h3>正文</h3>
-                            <p>{selectedEntry.content || "这一天保存了空白正文。"}</p>
+                            <p
+                                className="clickable-text"
+                                onClick={() => setDetailField("content")}
+                            >
+                                {selectedEntry.content || "这一天保存了空白正文。"}
+                            </p>
                         </section>
 
                         <section>
                             <h3>备注</h3>
-                            <p>{selectedEntry.note || "这一天没有备注。"}</p>
+                            <p
+                                className="clickable-text"
+                                onClick={() => setDetailField("note")}
+                            >
+                                {selectedEntry.note || "这一天没有备注。"}
+                            </p>
                         </section>
 
                         <p className="updated-at">
@@ -65,6 +84,23 @@ export function HistoryPanel({
                     </div>
                 ) : null}
             </div>
+
+            {detailField ? (
+                <div className="detail-modal">
+                    <div className="detail-modal-header">
+                        <h3>{detailTitle} — {formatDateLabel(selectedDate)}</h3>
+                        <button
+                            className="close-button"
+                            onClick={() => setDetailField(null)}
+                        >
+                            ×
+                        </button>
+                    </div>
+                    <div className="detail-modal-body">
+                        {detailText || "暂无内容。"}
+                    </div>
+                </div>
+            ) : null}
         </article>
     );
 }
