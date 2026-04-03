@@ -1,0 +1,63 @@
+[data-theme="dark"] {
+  --bg-main:
+    radial-gradient(ellipse at 25% 0%, rgba(80, 80, 100, 0.08), transparent 50%),
+    radial-gradient(ellipse at 75% 100%, rgba(60, 60, 80, 0.06), transparent 50%),
+    linear-gradient(160deg, #18181b 0%, #1c1c22 40%, #212127 100%);
+  --font-family: "Inter", "SF Pro Display", "PingFang SC", system-ui, sans-serif;
+  --color-text: #d4d4d8;
+  --color-text-secondary: #a1a1aa;
+  --color-text-muted: #71717a;
+  --color-accent: #a78bfa;
+  --color-heading: #e4e4e7;
+  --color-field-label: #a1a1aa;
+
+  --card-bg: rgba(39, 39, 42, 0.75);
+  --card-border: rgba(63, 63, 70, 0.5);
+  --card-shadow: 0 18px 50px rgba(0, 0, 0, 0.3);
+
+  --chip-bg: rgba(167, 139, 250, 0.08);
+  --chip-border: rgba(167, 139, 250, 0.2);
+  --chip-color: #a78bfa;
+
+  --input-bg: rgba(24, 24, 27, 0.8);
+  --input-border: rgba(63, 63, 70, 0.5);
+  --input-focus-border: rgba(167, 139, 250, 0.6);
+  --input-focus-shadow: 0 0 0 4px rgba(167, 139, 250, 0.1);
+
+  --btn-primary-bg: linear-gradient(135deg, #7c3aed 0%, #a78bfa 100%);
+  --btn-primary-color: #ffffff;
+  --btn-primary-shadow: 0 14px 24px rgba(124, 58, 237, 0.25);
+
+  --btn-secondary-bg: rgba(63, 63, 70, 0.3);
+  --btn-secondary-border: rgba(63, 63, 70, 0.5);
+  --btn-secondary-color: #d4d4d8;
+  --btn-secondary-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+
+  --icon-btn-bg: rgba(39, 39, 42, 0.8);
+  --icon-btn-bg-hover: rgba(63, 63, 70, 0.5);
+  --icon-btn-border: rgba(63, 63, 70, 0.5);
+  --icon-btn-shadow: 0 12px 28px rgba(0, 0, 0, 0.25);
+  --icon-btn-shadow-hover: 0 16px 30px rgba(0, 0, 0, 0.35);
+
+  --modal-overlay-bg: rgba(0, 0, 0, 0.55);
+  --modal-bg: rgba(39, 39, 42, 0.96);
+  --modal-border: rgba(63, 63, 70, 0.5);
+  --modal-shadow: 0 24px 60px rgba(0, 0, 0, 0.45);
+
+  --history-card-bg: linear-gradient(180deg, rgba(39, 39, 42, 0.9), rgba(30, 30, 34, 0.85));
+  --history-meta-color: #a1a1aa;
+  --history-border: rgba(63, 63, 70, 0.4);
+
+  --detail-modal-bg: rgba(24, 24, 27, 0.98);
+  --detail-modal-border: rgba(63, 63, 70, 0.3);
+
+  --status-success-bg: rgba(74, 222, 128, 0.1);
+  --status-success-color: #4ade80;
+  --status-error-bg: rgba(248, 113, 113, 0.1);
+  --status-error-color: #f87171;
+
+  --empty-state-color: #71717a;
+
+  --theme-btn-active-bg: #a78bfa;
+  --theme-btn-active-color: #18181b;
+}

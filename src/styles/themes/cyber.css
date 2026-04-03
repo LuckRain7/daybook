@@ -1,0 +1,64 @@
+[data-theme="cyber"] {
+  --bg-main:
+    radial-gradient(ellipse at 20% 0%, rgba(0, 198, 255, 0.1), transparent 50%),
+    radial-gradient(ellipse at 80% 100%, rgba(120, 80, 255, 0.08), transparent 50%),
+    radial-gradient(ellipse at 50% 50%, rgba(0, 255, 200, 0.04), transparent 60%),
+    linear-gradient(160deg, #0a0e1a 0%, #0d1224 40%, #111833 100%);
+  --font-family: "Inter", "SF Pro Display", "PingFang SC", system-ui, sans-serif;
+  --color-text: #c8d6e5;
+  --color-text-secondary: #8899aa;
+  --color-text-muted: #637282;
+  --color-accent: #00d2ff;
+  --color-heading: #e0eaf4;
+  --color-field-label: #8899aa;
+
+  --card-bg: rgba(14, 21, 40, 0.75);
+  --card-border: rgba(0, 210, 255, 0.1);
+  --card-shadow: 0 18px 50px rgba(0, 0, 0, 0.35), 0 0 30px rgba(0, 210, 255, 0.04);
+
+  --chip-bg: rgba(0, 210, 255, 0.08);
+  --chip-border: rgba(0, 210, 255, 0.2);
+  --chip-color: #00d2ff;
+
+  --input-bg: rgba(10, 16, 32, 0.8);
+  --input-border: rgba(0, 210, 255, 0.12);
+  --input-focus-border: rgba(0, 210, 255, 0.6);
+  --input-focus-shadow: 0 0 0 4px rgba(0, 210, 255, 0.1);
+
+  --btn-primary-bg: linear-gradient(135deg, #0088cc 0%, #00c8ff 100%);
+  --btn-primary-color: #ffffff;
+  --btn-primary-shadow: 0 14px 24px rgba(0, 140, 220, 0.3);
+
+  --btn-secondary-bg: rgba(0, 210, 255, 0.06);
+  --btn-secondary-border: rgba(0, 210, 255, 0.18);
+  --btn-secondary-color: #00d2ff;
+  --btn-secondary-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+
+  --icon-btn-bg: rgba(14, 21, 40, 0.8);
+  --icon-btn-bg-hover: rgba(0, 210, 255, 0.1);
+  --icon-btn-border: rgba(0, 210, 255, 0.15);
+  --icon-btn-shadow: 0 12px 28px rgba(0, 0, 0, 0.3);
+  --icon-btn-shadow-hover: 0 16px 30px rgba(0, 210, 255, 0.12);
+
+  --modal-overlay-bg: rgba(4, 6, 14, 0.6);
+  --modal-bg: rgba(14, 21, 40, 0.95);
+  --modal-border: rgba(0, 210, 255, 0.12);
+  --modal-shadow: 0 24px 60px rgba(0, 0, 0, 0.5), 0 0 40px rgba(0, 210, 255, 0.06);
+
+  --history-card-bg: linear-gradient(180deg, rgba(14, 21, 40, 0.9), rgba(10, 16, 32, 0.85));
+  --history-meta-color: #8899aa;
+  --history-border: rgba(0, 210, 255, 0.08);
+
+  --detail-modal-bg: rgba(10, 14, 26, 0.98);
+  --detail-modal-border: rgba(0, 210, 255, 0.08);
+
+  --status-success-bg: rgba(0, 230, 160, 0.1);
+  --status-success-color: #00e6a0;
+  --status-error-bg: rgba(255, 80, 80, 0.1);
+  --status-error-color: #ff6060;
+
+  --empty-state-color: #506070;
+
+  --theme-btn-active-bg: #00d2ff;
+  --theme-btn-active-color: #0a0e1a;
+}
