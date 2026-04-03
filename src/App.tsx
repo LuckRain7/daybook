@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import type { ChangeEvent } from "react";
 import { HistoryPanel } from "./components/HistoryPanel";
 import { SettingsModal } from "./components/SettingsModal";
@@ -11,6 +11,8 @@ import {
 } from "./storage/diaryDb";
 import type { DiaryEntry, Theme } from "./types";
 import { formatDateLabel, getLocalDateString } from "./utils/date";
+
+const AUTO_SAVE_DELAY = 60_000; // 1 minute
 
 const today = getLocalDateString();
 const THEME_KEY = "daybook-theme";
@@ -35,6 +37,8 @@ function createEmptyEntry(date: string): DiaryEntry {
 
 export default function App() {
     const fileInputRef = useRef<HTMLInputElement>(null);
+    const autoSaveTimerRef = useRef<ReturnType<typeof setTimeout>>(undefined);
+    const todayEntryRef = useRef<DiaryEntry>(createEmptyEntry(today));
     const [todayEntry, setTodayEntry] = useState<DiaryEntry>(
         createEmptyEntry(today),
     );
@@ -49,6 +53,35 @@ export default function App() {
     const [statusMessage, setStatusMessage] = useState("");
     const [errorMessage, setErrorMessage] = useState("");
     const [theme, setTheme] = useState<Theme>(getInitialTheme);
+
+    // Keep ref in sync with state for auto-save callback
+    todayEntryRef.current = todayEntry;
+
+    const scheduleAutoSave = useCallback(() => {
+        clearTimeout(autoSaveTimerRef.current);
+        autoSaveTimerRef.current = setTimeout(async () => {
+            const entry = todayEntryRef.current;
+            if (!entry.content && !entry.note) return;
+            try {
+                const entryToSave: DiaryEntry = {
+                    ...entry,
+                    date: today,
+                    updatedAt: new Date().toISOString(),
+                };
+                await saveTodayEntry(entryToSave);
+                setTodayEntry((current) => ({
+                    ...current,
+                    updatedAt: entryToSave.updatedAt,
+                }));
+                setStatusMessage("已自动保存。");
+            } catch {
+                // silent – user can still manually save
+            }
+        }, AUTO_SAVE_DELAY);
+    }, []);
+
+    // Clean up timer on unmount
+    useEffect(() => () => clearTimeout(autoSaveTimerRef.current), []);
 
     function handleThemeChange(newTheme: Theme) {
         setTheme(newTheme);
@@ -97,6 +130,7 @@ export default function App() {
     }
 
     async function handleSave() {
+        clearTimeout(autoSaveTimerRef.current);
         setIsSaving(true);
         setErrorMessage("");
         setStatusMessage("");
@@ -241,18 +275,20 @@ export default function App() {
                     isSaving={isSaving}
                     statusMessage={statusMessage}
                     errorMessage={errorMessage}
-                    onContentChange={(value) =>
+                    onContentChange={(value) => {
                         setTodayEntry((current) => ({
                             ...current,
                             content: value,
-                        }))
-                    }
-                    onNoteChange={(value) =>
+                        }));
+                        scheduleAutoSave();
+                    }}
+                    onNoteChange={(value) => {
                         setTodayEntry((current) => ({
                             ...current,
                             note: value,
-                        }))
-                    }
+                        }));
+                        scheduleAutoSave();
+                    }}
                     onSave={handleSave}
                 />
 
