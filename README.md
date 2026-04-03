@@ -1,3 +1,5 @@
+![daybook](logo-169.jpg)
+
 # daybook
 
 一个基于 React + TypeScript + Vite 的极简日记应用。
