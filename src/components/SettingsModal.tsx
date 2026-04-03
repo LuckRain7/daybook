@@ -1,9 +1,12 @@
 import type { ChangeEvent, RefObject } from "react";
+import type { Theme } from "../types";
 
 type SettingsModalProps = {
     isImporting: boolean;
     isExporting: boolean;
     fileInputRef: RefObject<HTMLInputElement>;
+    theme: Theme;
+    onThemeChange: (theme: Theme) => void;
     onClose: () => void;
     onExport: () => void;
     onImportClick: () => void;
@@ -14,6 +17,8 @@ export function SettingsModal({
     isImporting,
     isExporting,
     fileInputRef,
+    theme,
+    onThemeChange,
     onClose,
     onExport,
     onImportClick,
@@ -31,7 +36,7 @@ export function SettingsModal({
                 <div className="settings-modal-header">
                     <div>
                         <p className="panel-kicker">设置</p>
-                        <h2>数据导入与导出</h2>
+                        <h2>偏好与数据</h2>
                     </div>
                     <button
                         type="button"
@@ -41,6 +46,44 @@ export function SettingsModal({
                     >
                         ×
                     </button>
+                </div>
+
+                <div className="theme-section">
+                    <h3>主题风格</h3>
+                    <div className="theme-options">
+                        <button
+                            type="button"
+                            className={`theme-option${theme === "classic" ? " active" : ""}`}
+                            onClick={() => onThemeChange("classic")}
+                        >
+                            <span className="theme-swatch classic" />
+                            古风水墨
+                        </button>
+                        <button
+                            type="button"
+                            className={`theme-option${theme === "dark" ? " active" : ""}`}
+                            onClick={() => onThemeChange("dark")}
+                        >
+                            <span className="theme-swatch dark" />
+                            暗黑模式
+                        </button>
+                        <button
+                            type="button"
+                            className={`theme-option${theme === "cyber" ? " active" : ""}`}
+                            onClick={() => onThemeChange("cyber")}
+                        >
+                            <span className="theme-swatch cyber" />
+                            赛博科技
+                        </button>
+                        <button
+                            type="button"
+                            className={`theme-option${theme === "hacker" ? " active" : ""}`}
+                            onClick={() => onThemeChange("hacker")}
+                        >
+                            <span className="theme-swatch hacker" />
+                            黑客终端
+                        </button>
+                    </div>
                 </div>
 
                 <p className="settings-copy">

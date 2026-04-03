@@ -9,10 +9,20 @@ import {
     replaceAllEntries,
     saveTodayEntry,
 } from "./storage/diaryDb";
-import type { DiaryEntry } from "./types";
+import type { DiaryEntry, Theme } from "./types";
 import { formatDateLabel, getLocalDateString } from "./utils/date";
 
 const today = getLocalDateString();
+const THEME_KEY = "daybook-theme";
+
+function getInitialTheme(): Theme {
+    const saved = localStorage.getItem(THEME_KEY);
+    if (saved === "classic" || saved === "dark" || saved === "cyber" || saved === "hacker") return saved;
+    return "classic";
+}
+
+// Apply theme immediately to avoid flash
+document.documentElement.setAttribute("data-theme", getInitialTheme());
 
 function createEmptyEntry(date: string): DiaryEntry {
     return {
@@ -38,6 +48,13 @@ export default function App() {
     const [isExporting, setIsExporting] = useState(false);
     const [statusMessage, setStatusMessage] = useState("");
     const [errorMessage, setErrorMessage] = useState("");
+    const [theme, setTheme] = useState<Theme>(getInitialTheme);
+
+    function handleThemeChange(newTheme: Theme) {
+        setTheme(newTheme);
+        localStorage.setItem(THEME_KEY, newTheme);
+        document.documentElement.setAttribute("data-theme", newTheme);
+    }
 
     useEffect(() => {
         void loadTodayEntry();
@@ -208,6 +225,8 @@ export default function App() {
                     isImporting={isImporting}
                     isExporting={isExporting}
                     fileInputRef={fileInputRef}
+                    theme={theme}
+                    onThemeChange={handleThemeChange}
                     onClose={() => setIsSettingsOpen(false)}
                     onExport={handleExport}
                     onImportClick={handleImportClick}
