@@ -28,12 +28,20 @@ function EditorInner({ value, onChange, readonly }: MarkdownEditorProps) {
             .config((ctx) => {
                 ctx.set(rootCtx, root);
                 ctx.set(defaultValueCtx, value);
-                if (readonly) {
-                    ctx.update(editorViewOptionsCtx, (prev) => ({
-                        ...prev,
-                        editable: () => false,
-                    }));
-                }
+                ctx.update(editorViewOptionsCtx, (prev) => ({
+                    ...prev,
+                    ...(readonly ? { editable: () => false } : {}),
+                    clipboardTextSerializer: (slice) => {
+                        const lines: string[] = [];
+                        slice.content.descendants((node) => {
+                            if (node.isTextblock) {
+                                lines.push(node.textContent);
+                            }
+                            return true;
+                        });
+                        return lines.join("\n");
+                    },
+                }));
             })
             .use(commonmark);
 
